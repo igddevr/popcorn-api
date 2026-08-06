@@ -1,18 +1,22 @@
 {
-  "name": "popcorn-api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src/server.ts",
-  "type": "commonjs",
-  "scripts": {
-    "dev": "npx tsx watch src/server.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^26.1.1",
-    "tsx": "^4.23.1",
-    "typescript": "^7.0.2"
-  }
+    "name": "popcorn-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/server.ts",
+    "scripts": {
+        "dev": "npx tsx watch src/server.ts"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/node": "^26.1.1",
+        "prettier": "3.9.6",
+        "tsx": "^4.23.1",
+        "typescript": "^7.0.2"
+    },
+    "dependencies": {
+        "express": "^5.2.1"
+    }
 }
