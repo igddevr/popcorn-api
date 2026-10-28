@@ -35,6 +35,18 @@ app.post('/movies', async (req, res) => {
     } = req.body
 
     try {
+        const movieNotUnique = await prisma.movie.findFirst({
+            where: {
+                title: { equals: title, mode: 'insensitive' },
+            },
+        })
+
+        if (movieNotUnique) {
+            res.status(409).send({
+                message: 'Já existe um filme cadastrado com esse título',
+            })
+        }
+
         const movie = await prisma.movie.create({
             data: {
                 title,
