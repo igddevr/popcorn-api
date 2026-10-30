@@ -24,15 +24,8 @@ app.get('/movies', async (_, res) => {
 })
 
 app.post('/movies', async (req, res) => {
-    const {
-        title,
-        sinopse,
-        release_date,
-        duration_minutes,
-        rating,
-        language,
-        genre_id,
-    } = req.body
+    const { title, sinopse, release_date, duration_minutes, rating, language } =
+        req.body
 
     try {
         const movieNotUnique = await prisma.movie.findFirst({
@@ -66,6 +59,47 @@ app.post('/movies', async (req, res) => {
         res.status(201).json(movie)
     } catch (error) {
         return res.status(500).send({ message: 'Falha ao cadastrar um filme' })
+    }
+})
+
+app.put('/movies/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    const movieExists = await prisma.movie.findUnique({
+        where: {
+            id,
+        },
+    })
+
+    try {
+        if (!movieExists) {
+            return res.status(404).send({ message: 'Filme não encontrado' })
+        }
+
+        const data = { ...req.body }
+        data.release_date = data.release_date
+            ? new Date(data.release_date)
+            : undefined
+
+        const { genre_id, ...movieData } = data
+
+        const movie = await prisma.movie.update({
+            where: {
+                id,
+            },
+            data: {
+                ...movieData,
+                movie_genres: {
+                    deleteMany: {}, //exclui todos os gêneros associados ao filme antes de adicionar o novo gênero
+                    create: {
+                        genre_id,
+                    },
+                },
+            },
+        })
+
+        res.status(200).json(movie)
+    } catch (error) {
+        return res.status(500).send({ message: 'Falha ao atualizar o filme' })
     }
 })
 
