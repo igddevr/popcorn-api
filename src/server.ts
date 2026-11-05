@@ -103,6 +103,35 @@ app.put('/movies/:id', async (req, res) => {
     }
 })
 
+app.delete('/movies/:id', async (req, res) => {
+    const id = Number(req.params.id)
+    try {
+        const movieExists = await prisma.movie.findUnique({ where: { id } })
+
+        if (!movieExists) {
+            return res.status(404).send({ message: 'Filme não encontrado' })
+        }
+
+        await prisma.movie_genre.deleteMany({
+            where: {
+                movie_id: id,
+            },
+        })
+
+        const movie = await prisma.movie.delete({
+            where: {
+                id: id,
+            },
+        })
+
+        res.status(200).send({
+            message: `Filme ${movie.title} deletado com sucesso`,
+        })
+    } catch (error) {
+        return res.status(500).send({ error })
+    }
+})
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta http://localhost:${port}`)
 })
