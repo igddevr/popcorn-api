@@ -1,0 +1,90 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Popcorn API",
+        "description": "API responsável por fornecer informações sobre filmes, incluindo detalhes como título, sinopse, data de lançamento, duração, avaliação e idioma.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/movies": {
+            "get": {
+                "tags": ["Movies"],
+                "summary": "Retorna a lista de filmes",
+                "responses": {
+                    "200": {
+                        "description": "Lista de filmes retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/genres/name": {
+            "get": {
+                "summary": "Retorna a lista de filmes referente ao gênero",
+                "responses": {
+                    "200": {
+                        "description": "Lista de filmes referente ao gênero retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Movie": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do filme"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Título do filme"
+                    },
+                    "sinopse": {
+                        "type": "string",
+                        "description": "Sinopse do filme"
+                    },
+                    "releaseDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Data de lançamento do filme"
+                    },
+                    "rating": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Avaliação do filme"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Idioma do filme"
+                    },
+                    "duration": {
+                        "type": "integer",
+                        "description": "Duração do filme em minutos"
+                    }
+                }
+            }
+        }
+    }
+}
