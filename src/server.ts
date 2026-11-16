@@ -67,6 +67,13 @@ app.post('/movies', async (req, res) => {
 
 app.put('/movies/:id', async (req, res) => {
     const id = Number(req.params.id)
+
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).send({
+            message: 'ID inválido',
+        })
+    }
+
     const movieExists = await prisma.movie.findUnique({
         where: {
             id,
@@ -91,10 +98,20 @@ app.put('/movies/:id', async (req, res) => {
             },
             data: {
                 ...movieData,
+
+                ...(genre_id !== undefined && {
+                    movie_genres: {
+                        deleteMany: {},
+                        create: {
+                            genre_id: Number(genre_id),
+                        },
+                    },
+                }),
+            },
+            include: {
                 movie_genres: {
-                    deleteMany: {}, //exclui todos os gêneros associados ao filme antes de adicionar o novo gênero
-                    create: {
-                        genre_id,
+                    include: {
+                        genres: true,
                     },
                 },
             },
@@ -102,7 +119,9 @@ app.put('/movies/:id', async (req, res) => {
 
         res.status(200).json(movie)
     } catch (error) {
-        return res.status(500).send({ message: 'Falha ao atualizar o filme' })
+        return res
+            .status(500)
+            .send({ message: 'Falha ao atualizar o filme', error })
     }
 })
 
@@ -131,7 +150,7 @@ app.delete('/movies/:id', async (req, res) => {
             message: `Filme ${movie.title} deletado com sucesso`,
         })
     } catch (error) {
-        return res.status(500).send({ error })
+        return res.status(500).send({ message: 'Falha ao deletar o filme' })
     }
 })
 
