@@ -1,0 +1,332 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Popcorn API",
+        "description": "API responsável por fornecer informações sobre filmes, incluindo detalhes como título, sinopse, data de lançamento, duração, avaliação e idioma.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/movies": {
+            "get": {
+                "tags": ["Movies"],
+                "summary": "Retorna a lista de filmes",
+                "responses": {
+                    "200": {
+                        "description": "Lista de filmes retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/genres/{name}": {
+            "get": {
+                "tags": ["Genres"],
+                "summary": "Retorna os filmes de um gênero específico",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Nome do gênero desejado",
+                        "example": "Romantic Comedy"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de filmes do gênero retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Movie"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "id": 5,
+                                        "title": "Scott Pilgrim vs. the World",
+                                        "sinopse": "A young man must defeat his new girlfriend's seven evil exes.",
+                                        "release_date": "2010-08-08T00:00:00.000Z",
+                                        "duration_minutes": 112,
+                                        "rating": 7.5,
+                                        "language": "English",
+                                        "poster_url": null,
+                                        "created_at": "2026-10-24T15:19:21.076Z",
+                                        "updated_at": null,
+                                        "movie_genres": [
+                                            {
+                                                "movie_id": 5,
+                                                "genre_id": 2,
+                                                "genres": {
+                                                    "id": 2,
+                                                    "name": "Romantic Comedy",
+                                                    "created_at": "2026-10-24T12:06:59.403Z",
+                                                    "updated_at": null
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Gênero não encontrado"
+                    },
+                    "500": {
+                        "description": "Falha ao buscar filmes por gênero"
+                    }
+                }
+            }
+        },
+        "/movies/{id}": {
+            "put": {
+                "tags": ["Movies"],
+                "summary": "Atualiza as informações de um filme específico",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do filme a ser atualizado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MovieInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Filme atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Filme não encontrado"
+                    },
+                    "500": {
+                        "description": "Falha ao atualizar o filme"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Movies"],
+                "summary": "Deleta um filme específico",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID do filme a ser deletado"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MovieInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Filme deletado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Movie"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Filme não encontrado"
+                    },
+                    "500": {
+                        "description": "Falha ao deletar o filme"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Movie": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do filme"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "Título do filme"
+                    },
+                    "sinopse": {
+                        "type": "string",
+                        "description": "Sinopse do filme"
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de lançamento do filme"
+                    },
+                    "duration_minutes": {
+                        "type": "integer",
+                        "description": "Duração do filme em minutos"
+                    },
+                    "rating": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Avaliação do filme"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Idioma do filme"
+                    },
+                    "poster_url": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "URL do pôster do filme"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de criação do registro"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "description": "Data da última atualização"
+                    },
+                    "movie_genres": {
+                        "type": "array",
+                        "description": "Lista de relacionamentos entre o filme e seus gêneros",
+                        "items": {
+                            "$ref": "#/components/schemas/MovieGenre"
+                        }
+                    }
+                }
+            },
+            "MovieGenre": {
+                "type": "object",
+                "description": "Relacionamento entre filme e gênero",
+                "properties": {
+                    "movie_id": {
+                        "type": "integer",
+                        "description": "ID do filme"
+                    },
+                    "genre_id": {
+                        "type": "integer",
+                        "description": "ID do gênero"
+                    },
+                    "genres": {
+                        "$ref": "#/components/schemas/Genre"
+                    }
+                }
+            },
+            "Genre": {
+                "type": "object",
+                "description": "Informações do gênero cinematográfico",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "ID do gênero"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Nome do gênero"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Data de criação do gênero"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true,
+                        "description": "Data da última atualização do gênero"
+                    }
+                }
+            },
+            "MovieInput": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "sinopse",
+                    "release_date",
+                    "duration_minutes",
+                    "rating",
+                    "language",
+                    "genre_id"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Título do filme"
+                    },
+                    "sinopse": {
+                        "type": "string",
+                        "description": "Sinopse do filme"
+                    },
+                    "release_date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Data de lançamento do filme"
+                    },
+                    "duration_minutes": {
+                        "type": "integer",
+                        "description": "Duração do filme em minutos"
+                    },
+                    "rating": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Avaliação do filme"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Idioma do filme"
+                    },
+                    "genre_id": {
+                        "type": "integer",
+                        "description": "ID do gênero do filme"
+                    }
+                }
+            }
+        }
+    }
+}
